@@ -1,113 +1,60 @@
-import Image from 'next/image'
+"use client";
+import { useEffect, useState } from "react";
+import { retrieveQualityControlEvaluation } from "./src/services/QualityControlEvaluation";
+import Table from "./src/components/Table";
+import { mapRowData } from "./src/utils/mapData";
+import { Row } from "./src/interfaces/Row";
 
 export default function Home() {
+  const [data, setData] = useState<Array<Row>>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const defaultPost =
+    "reference 70.0 45.0 6\nthermometer temp-1\n2007-04-05T22:00 72.4\n2007-04-05T22:01 76.0\n2007-04-05T22:02 79.1\n2007-04-05T22:03 75.6\n2007-04-05T22:04 71.2\n2007-04-05T22:05 71.4\n\n2007-04-05T22:06 69.2\n2007-04-05T22:07 65.2\n2007-04-05T22:08 62.8\n2007-04-05T22:09 61.4\n\n2007-04-05T22:10 64.0\n2007-04-05T22:11 67.5\n2007-04-05T22:12 69.4\n\n\nthermometer temp-2\n2007-04-05T22:01 69.5\n2007-04-05T22:02 70.1\n2007-04-05T22:03 71.3\n2007-04-05T22:04 71.5\n2007-04-05T22:05 69.8\n\nhumidity hum-1\n2007-04-05T22:04 45.2\n2007-04-05T22:05 45.3\n2007-04-05T22:06 45.1\n\n\nhumidity hum-2\n2007-04-05T22:04 44.4\n2007-04-05T22:05 43.9\n2007-04-05T22:06 44.9\n2007-04-05T22:07 43.8\n2007-04-05T22:08 42.1\n\n\nmonoxide mon-1\n2007-04-05T22:04 5\n2007-04-05T22:05 7\n2007-04-05T22:06 9\n\n\nmonoxide mon-2\n2007-04-05T22:04 2\n2007-04-05T22:05 4\n2007-04-05T22:06 10\n2007-04-05T22:07 8\n2007-04-05T22:08 6\n";
+
+  useEffect(() => {
+    if (isLoading) {
+      retrieveData();
+    }
+  }, [isLoading]);
+
+  const retrieveData = async () => {
+    const response = await retrieveQualityControlEvaluation(defaultPost);
+    const row = mapRowData(defaultPost, response);
+    const updatedRow = [...data, row];
+    setData(updatedRow);
+    setIsLoading(false);
+  };
+
+  const handleOnRemove = () => {};
+
+  const handleOnGenerateRandomData = () => {};
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!data) {
+    return <div>Data not available.</div>;
+  }
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
+    <main className="flex min-h-screen flex-col gap-10 p-24">
+      <div>
+        <h1 className="text-5xl	font-light">Audition Assignment</h1>
+        <h3 className="text-xl mt-2 font-normal">Software Engineer</h3>
+        <h3 className="text-sm mt-1 font-light">
+          Test: Quality Control Evaluation
+        </h3>
       </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
+      <div>
+        <button
+          onClick={handleOnGenerateRandomData}
+          className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded"
+        >
+          Generate Random Data
+        </button>
       </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+      <Table rows={data} handleOnRemove={handleOnRemove} />
     </main>
-  )
+  );
 }
