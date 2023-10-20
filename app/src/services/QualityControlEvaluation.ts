@@ -1,11 +1,11 @@
-const URL = "http://localhost:3001/dev/log";
+const URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const retrieveQualityControlEvaluation = async (value: string) => {
   const requestOptions = {
     method: "POST",
     body: value,
   };
-  const request = fetch(URL, requestOptions);
+  const request = fetch(`${URL}/log`, requestOptions);
   return (await request).json();
 };
 
