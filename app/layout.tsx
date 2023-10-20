@@ -18,7 +18,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <div className="fixed min-h-screen w-4 bg-blue-400 t-0 b-0 l-0 "></div>
-        {children}
+        <div className="pl-4">{children}</div>
       </body>
     </html>
   );
